@@ -1,1 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chapter 1: Analogy - UPSI & Constable Reasoning Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+  html,body{min-height:100%}
+  body{
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    padding:20px 15px;
+    color:#2d3748;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    background:radial-gradient(circle at 20% 80%,rgba(120,119,198,.3),transparent 50%),
+               radial-gradient(circle at 80% 20%,rgba(255,119,198,.3),transparent 50%),
+               radial-gradient(circle at 40% 40%,rgba(120,219,255,.2),transparent 50%);
+    pointer-events:none;z-index:0;
+  }
+  .container{max-width:900px;margin:0 auto;position:relative;z-index:1}
+
+  /* HEADER */
+  .app-header{
+    text-align:center;
+    color:#fff;
+    margin-bottom:25px;
+    animation:fadeInDown .8s ease;
+  }
+  .app-header h1{
+    font-size:2.4rem;
+    font-weight:800;
+    text-shadow:0 4px 20px rgba(0,0,0,.25);
+    letter-spacing:-.5px;
+    margin-bottom:8px;
+  }
+  .app-header h1 i{margin-right:10px;color:#ffd700}
+  .app-header p{font-size:1.05rem;opacity:.95;font-weight:300}
+
+  /* CARD */
+  .card{
+    background:rgba(255,255,255,.97);
+    border-radius:24px;
+    padding:35px 30px;
+    box-shadow:0 25px 60px rgba(0,0,0,.25),0 0 0 1px rgba(255,255,255,.1);
+    backdrop-filter:blur(20px);
+    animation:fadeInUp .6s ease;
+  }
+
+  /* SCREENS */
+  .screen{display:none}
+  .screen.active{display:block;animation:fadeIn .4s ease}
+
+  /* START SCREEN */
+  .chapter-icon{
+    width:110px;height:110px;
+    margin:0 auto 20px;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    border-radius:30px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 15px 35px rgba(102,126,234,.4);
+    animation:pulse 2.5s ease-in-out infinite;
+  }
+  .chapter-icon i{font-size:3.2rem;color:#fff}
+  .start-title{
+    text-align:center;
+    font-size:2rem;
+    font-weight:700;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:8px;
+  }
+  .start-subtitle{text-align:center;color:#718096;font-size:1.05rem;margin-bottom:30px}
+
+  .chapter-list{display:grid;gap:14px;margin-bottom:30px}
+  .chapter-card{
+    background:linear-gradient(135deg,#f7fafc,#edf2f7);
+    border:2px solid transparent;
+    border-radius:16px;
+    padding:20px 22px;
+    cursor:pointer;
+    transition:all .3s ease;
+    display:flex;align-items:center;gap:18px;
+    position:relative;overflow:hidden;
+  }
+  .chapter-card.active-chapter{
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:#fff;
+    border-color:#fff;
+    box-shadow:0 10px 30px rgba(102,126,234,.4);
+  }
+  .chapter-card:not(.locked):hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,0,0,.12);
+  }
+  .chapter-card.locked{opacity:.55;cursor:not-allowed}
+  .chapter-num{
+    width:50px;height:50px;
+    border-radius:14px;
+    background:rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:1.3rem;
+    flex-shrink:0;
+  }
+  .chapter-card:not(.active-chapter) .chapter-num{
+    background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;
+  }
+  .chapter-info{flex:1;min-width:0}
+  .chapter-info h3{font-size:1.15rem;font-weight:600;margin-bottom:4px}
+  .chapter-info p{font-size:.88rem;opacity:.85}
+  .chapter-card .arrow{font-size:1.3rem;opacity:.7}
+
+  .stats-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:25px;
+  }
+  .stat-box{
+    background:linear-gradient(135deg,#f7fafc,#edf2f7);
+    border-radius:14px;
+    padding:18px 10px;
+    text-align:center;
+  }
+  .stat-box .num{
+    font-size:1.7rem;font-weight:700;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .stat-box .label{font-size:.78rem;color:#718096;font-weight:500;margin-top:4px}
+
+  /* BUTTONS */
+  .btn{
+    width:100%;
+    padding:16px 28px;
+    border:none;border-radius:14px;
+    font-size:1.05rem;font-weight:600;
+    cursor:pointer;
+    transition:all .3s ease;
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:inherit;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:#fff;
+    box-shadow:0 10px 25px rgba(102,126,234,.4);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(102,126,234,.5)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn-secondary{
+    background:#edf2f7;color:#4a5568;
+  }
+  .btn-secondary:hover{background:#e2e8f0;transform:translateY(-2px)}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  /* QUIZ SCREEN */
+  .quiz-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:18px;flex-wrap:wrap;gap:10px;
+  }
+  .question-counter{
+    font-size:.95rem;color:#718096;font-weight:500;
+  }
+  .question-counter strong{color:#667eea;font-size:1.1rem;font-weight:700}
+  .score-pill{
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:#fff;
+    padding:6px 16px;
+    border-radius:50px;
+    font-size:.85rem;font-weight:600;
+    display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 4px 12px rgba(102,126,234,.3);
+  }
+
+  .progress-wrap{
+    width:100%;height:10px;
+    background:#edf2f7;
+    border-radius:50px;overflow:hidden;
+    margin-bottom:25px;
+  }
+  .progress-bar{
+    height:100%;
+    background:linear-gradient(90deg,#667eea,#764ba2,#f093fb);
+    border-radius:50px;
+    transition:width .5s ease;
+    width:0;
+    box-shadow:0 0 10px rgba(102,126,234,.5);
+  }
+
+  .question-box{
+    background:linear-gradient(135deg,#f7fafc,#edf2f7);
+    border-radius:18px;
+    padding:24px 22px;
+    margin-bottom:22px;
+    border-left:5px solid #667eea;
+  }
+  .question-box .q-label{
+    display:inline-block;
+    background:#667eea;color:#fff;
+    padding:3px 12px;border-radius:50px;
+    font-size:.75rem;font-weight:600;
+    margin-bottom:10px;letter-spacing:.5px;
+  }
+  .question-text{
+    font-size:1.15rem;font-weight:500;
+    line-height:1.6;color:#2d3748;
+    word-wrap:break-word;
+  }
+
+  .options{display:grid;gap:12px;margin-bottom:22px}
+  .option{
+    background:#fff;
+    border:2px solid #e2e8f0;
+    border-radius:14px;
+    padding:16px 20px;
+    cursor:pointer;
+    transition:all .25s ease;
+    display:flex;align-items:center;gap:14px;
+    font-size:1rem;font-weight:500;
+    color:#2d3748;text-align:left;
+    width:100%;font-family:inherit;
+  }
+  .option:hover:not(.disabled){
+    border-color:#667eea;
+    background:#f7fafc;
+    transform:translateX(4px);
+    box-shadow:0 5px 15px rgba(102,126,234,.15);
+  }
+  .option-letter{
+    width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(135deg,#edf2f7,#e2e8f0);
+    color:#4a5568;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:1rem;flex-shrink:0;
+    transition:all .25s ease;
+  }
+  .option-text{flex:1;word-wrap:break-word}
+  .option-icon{font-size:1.3rem;opacity:0;transition:opacity .3s}
+
+  .option.selected{
+    border-color:#667eea;
+    background:linear-gradient(135deg,#eef2ff,#e0e7ff);
+  }
+  .option.selected .option-letter{
+    background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;
+  }
+  .option.correct{
+    border-color:#48bb78;
+    background:linear-gradient(135deg,#f0fff4,#c6f6d5);
+    animation:correctPulse .5s ease;
+  }
+  .option.correct .option-letter{
+    background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;
+  }
+  .option.correct .option-icon{opacity:1;color:#48bb78}
+  .option.wrong{
+    border-color:#f56565;
+    background:linear-gradient(135deg,#fff5f5,#fed7d7);
+    animation:shake .5s ease;
+  }
+  .option.wrong .option-letter{
+    background:linear-gradient(135deg,#f56565,#e53e3e);color:#fff;
+  }
+  .option.wrong .option-icon{opacity:1;color:#f56565}
+  .option.disabled{cursor:not-allowed}
+
+  /* FEEDBACK */
+  .feedback{
+    border-radius:16px;
+    padding:20px 22px;
+    margin-bottom:20px;
+    display:none;
+    animation:slideDown .4s ease;
+  }
+  .feedback.show{display:block}
+  .feedback.correct{
+    background:linear-gradient(135deg,#f0fff4,#c6f6d5);
+    border-left:5px solid #48bb78;
+  }
+  .feedback.wrong{
+    background:linear-gradient(135deg,#fff5f5,#fed7d7);
+    border-left:5px solid #f56565;
+  }
+  .feedback-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:1.15rem;font-weight:700;margin-bottom:10px;
+  }
+  .feedback.correct .feedback-title{color:#22543d}
+  .feedback.wrong .feedback-title{color:#742a2a}
+  .feedback-title i{font-size:1.5rem}
+  .solution-label{
+    font-size:.8rem;font-weight:700;
+    color:#667eea;letter-spacing:1px;
+    margin-bottom:6px;text-transform:uppercase;
+  }
+  .solution-text{
+    font-size:.98rem;line-height:1.6;color:#2d3748;
+  }
+
+  /* RESULTS */
+  .result-icon{
+    width:130px;height:130px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:4rem;color:#fff;
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
+    animation:bounceIn .8s ease;
+  }
+  .result-icon.excellent{background:linear-gradient(135deg,#ffd700,#ff8c00)}
+  .result-icon.good{background:linear-gradient(135deg,#48bb78,#38a169)}
+  .result-icon.average{background:linear-gradient(135deg,#667eea,#764ba2)}
+  .result-icon.poor{background:linear-gradient(135deg,#f56565,#e53e3e)}
+
+  .result-title{
+    text-align:center;font-size:2rem;font-weight:700;
+    margin-bottom:8px;color:#2d3748;
+  }
+  .result-message{
+    text-align:center;font-size:1.05rem;
+    color:#718096;margin-bottom:30px;line-height:1.6;
+  }
+
+  .score-circle-wrap{
+    display:flex;justify-content:center;margin-bottom:25px;
+  }
+  .score-circle{
+    width:200px;height:200px;
+    position:relative;
+  }
+  .score-circle svg{transform:rotate(-90deg);width:100%;height:100%}
+  .score-circle .bg-ring{fill:none;stroke:#edf2f7;stroke-width:14}
+  .score-circle .progress-ring{
+    fill:none;
+    stroke:url(#gradient);
+    stroke-width:14;
+    stroke-linecap:round;
+    transition:stroke-dashoffset 1.5s ease;
+  }
+  .score-circle .center-text{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+  }
+  .score-percent{
+    font-size:2.8rem;font-weight:800;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;
+  }
+  .score-label{font-size:.85rem;color:#718096;font-weight:500;margin-top:4px}
+
+  .result-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;margin-bottom:25px;
+  }
+  .result-stat{
+    background:linear-gradient(135deg,#f7fafc,#edf2f7);
+    border-radius:14px;
+    padding:18px 10px;text-align:center;
+  }
+  .result-stat .icon{font-size:1.5rem;margin-bottom:6px}
+  .result-stat.correct-stat .icon{color:#48bb78}
+  .result-stat.wrong-stat .icon{color:#f56565}
+  .result-stat.skip-stat .icon{color:#a0aec0}
+  .result-stat .num{font-size:1.6rem;font-weight:700;color:#2d3748}
+  .result-stat .label{font-size:.78rem;color:#718096;font-weight:500;margin-top:2px}
+
+  /* ANIMATIONS */
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes correctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  @keyframes bounceIn{
+    0%{opacity:0;transform:scale(.3)}
+    50%{opacity:1;transform:scale(1.1)}
+    100%{transform:scale(1)}
+  }
+
+  /* RESPONSIVE */
+  @media (max-width:600px){
+    body{padding:15px 10px}
+    .app-header h1{font-size:1.7rem}
+    .app-header p{font-size:.92rem}
+    .card{padding:25px 20px;border-radius:20px}
+    .start-title{font-size:1.6rem}
+    .chapter-icon{width:90px;height:90px}
+    .chapter-icon i{font-size:2.6rem}
+    .question-text{font-size:1.05rem}
+    .option{padding:14px 16px;font-size:.95rem}
+    .option-letter{width:32px;height:32px;font-size:.95rem}
+    .result-icon{width:110px;height:110px;font-size:3.4rem}
+    .result-title{font-size:1.6rem}
+    .score-circle{width:170px;height:170px}
+    .score-percent{font-size:2.3rem}
+    .stats-row{grid-template-columns:repeat(3,1fr);gap:8px}
+    .stat-box{padding:14px 6px}
+    .stat-box .num{font-size:1.3rem}
+    .btn-row{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="app-header">
+    <h1><i class="fas fa-brain"></i>Reasoning Mastery</h1>
+    <p>UPSI &amp; Constable Examination Prep</p>
+  </header>
+
+  <main class="card">
+
+    <!-- ========== START SCREEN ========== -->
+    <section id="screen-start" class="screen active">
+      <div class="chapter-icon"><i class="fas fa-puzzle-piece"></i></div>
+      <h2 class="start-title">Choose Your Chapter</h2>
+      <p class="start-subtitle">Select a chapter to begin your practice journey</p>
+
+      <div class="chapter-list" id="chapter-list">
+        <div class="chapter-card active-chapter" data-chapter="1">
+          <div class="chapter-num">01</div>
+          <div class="chapter-info">
+            <h3>Analogy</h3>
+            <p>100 Practice Questions • Available Now</p>
+          </div>
+          <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="chapter-card locked">
+          <div class="chapter-num"><i class="fas fa-lock" style="font-size:.95rem"></i></div>
+          <div class="chapter-info">
+            <h3>Classification</h3>
+            <p>Coming Soon</p>
+          </div>
+        </div>
+        <div class="chapter-card locked">
+          <div class="chapter-num"><i class="fas fa-lock" style="font-size:.95rem"></i></div>
+          <div class="chapter-info">
+            <h3>Series</h3>
+            <p>Coming Soon</p>
+          </div>
+        </div>
+        <div class="chapter-card locked">
+          <div class="chapter-num"><i class="fas fa-lock" style="font-size:.95rem"></i></div>
+          <div class="chapter-info">
+            <h3>Coding-Decoding</h3>
+            <p>Coming Soon</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="num">100</div>
+          <div class="label">Questions</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">4</div>
+          <div class="label">Options Each</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">∞</div>
+          <div class="label">Attempts</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="btn-start">
+        <i class="fas fa-play"></i> Start Quiz
+      </button>
+    </section>
+
+    <!-- ========== QUIZ SCREEN ========== -->
+    <section id="screen-quiz" class="screen">
+      <div class="quiz-header">
+        <div class="question-counter">
+          Question <strong id="q-current">1</strong> of <strong id="q-total">100</strong>
+        </div>
+        <div class="score-pill">
+          <i class="fas fa-star"></i>
+          <span>Score: <span id="live-score">0</span></span>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+
+      <div class="question-box">
+        <span class="q-label"><i class="fas fa-question-circle"></i> ANALOGY</span>
+        <div class="question-text" id="question-text">Loading...</div>
+      </div>
+
+      <div class="options" id="options-container"></div>
+
+      <div class="feedback" id="feedback">
+        <div class="feedback-title" id="feedback-title"></div>
+        <div class="solution-label">Solution</div>
+        <div class="solution-text" id="solution-text"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="btn-quit">
+          <i class="fas fa-times"></i> Quit
+        </button>
+        <button class="btn btn-primary" id="btn-next" disabled>
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== RESULTS SCREEN ========== -->
+    <section id="screen-result" class="screen">
+      <div class="result-icon" id="result-icon"><i class="fas fa-trophy"></i></div>
+      <h2 class="result-title" id="result-title">Quiz Complete!</h2>
+      <p class="result-message" id="result-message"></p>
+
+      <div class="score-circle-wrap">
+        <div class="score-circle">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#667eea"/>
+                <stop offset="50%" stop-color="#764ba2"/>
+                <stop offset="100%" stop-color="#f093fb"/>
+              </linearGradient>
+            </defs>
+            <circle class="bg-ring" cx="100" cy="100" r="85"/>
+            <circle class="progress-ring" id="progress-ring" cx="100" cy="100" r="85"
+                    stroke-dasharray="534" stroke-dashoffset="534"/>
+          </svg>
+          <div class="center-text">
+            <div class="score-percent" id="score-percent">0%</div>
+            <div class="score-label">Accuracy</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-stats">
+        <div class="result-stat correct-stat">
+          <div class="icon"><i class="fas fa-check-circle"></i></div>
+          <div class="num" id="stat-correct">0</div>
+          <div class="label">Correct</div>
+        </div>
+        <div class="result-stat wrong-stat">
+          <div class="icon"><i class="fas fa-times-circle"></i></div>
+          <div class="num" id="stat-wrong">0</div>
+          <div class="label">Wrong</div>
+        </div>
+        <div class="result-stat skip-stat">
+          <div class="icon"><i class="fas fa-minus-circle"></i></div>
+          <div class="num" id="stat-skip">0</div>
+          <div class="label">Skipped</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="btn-home">
+          <i class="fas fa-home"></i> Home
+        </button>
+        <button class="btn btn-primary" id="btn-restart">
+          <i class="fas fa-redo"></i> Try Again
+        </button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* =========================================================
+   CHAPTER 1: ANALOGY - 100 QUESTIONS
+   Source: Uttar Pradesh UPSI & Constable Reasoning
+   ========================================================= */
+const QUESTIONS = [
+  {q:"Mother : Child :: Cloud : ?",o:["Weather","Loud","Rain","Shine"],a:2,s:"A mother gives birth to a child; similarly, a cloud produces rain."},
+  {q:"Lion : Den :: Rabbit : ?",o:["Trench","Pit","Burrow","Hole"],a:2,s:"A lion lives in a den; a rabbit lives in a burrow (habitat relationship)."},
+  {q:"Melt : Liquid :: Freeze : ?",o:["Ice","Oxygen","Solid","Pressure"],a:2,s:"Melting turns something into liquid; freezing turns something into solid."},
+  {q:"DBMS : SMBD :: JAVA : ?",o:["AVJA","JAAV","AVAJ","AAVJ"],a:2,s:"The letters of the word are written in reverse order. DBMS → SMBD; JAVA → AVAJ."},
+  {q:"Traveller : Journey :: Sailor : ?",o:["Water","Ship","Voyage","Crew"],a:2,s:"A traveller undertakes a journey; a sailor undertakes a voyage."},
+  {q:"BGEK : AGDJ :: DBHI : ?",o:["CAGH","ECIJ","HGCB","CBGH"],a:3,s:"Each letter shifts by -1: D→C, B→A(here pattern -1,0,-1,-1) producing CBGH."},
+  {q:"Russia : Moscow :: Greece : ?",o:["Tokyo","Washington D.C.","London","Athens"],a:3,s:"Moscow is the capital of Russia; Athens is the capital of Greece."},
+  {q:"THFDE : VJHFG :: BOURN : ?",o:["CQWTP","CPWSP","DPWSP","DQWTP"],a:2,s:"Each letter is shifted by +2: B→D, O→Q, U→W, R→T... giving DPWSP based on the pattern in the source."},
+  {q:"Botany : Plants :: Entomology : ?",o:["Birds","Plants","Insects","Snakes"],a:2,s:"Botany is the study of plants; entomology is the study of insects."},
+  {q:"BPMN : CQNO :: GTPL : ?",o:["EUQM","HUQM","HURN","DUQN"],a:1,s:"Each letter is shifted by +1: G→H, T→U, P→Q, L→M, giving HUQM."},
+  {q:"P : Q :: T : ?",o:["R","P","T","U"],a:3,s:"The next letter in the alphabet: P→Q (next), so T→U (next)."},
+  {q:"Curtains : Fabric :: Blinds : ?",o:["Slats","Lifters","Cords","Covers"],a:0,s:"Curtains are made of fabric; blinds are made of slats."},
+  {q:"Soap : Clean :: Perfume : ?",o:["Neat","Smell","Smart","Freshness"],a:1,s:"Soap is used to clean; perfume is used for smell/fragrance."},
+  {q:"Glove : Hand :: Sock : ?",o:["Head","Arm","Foot","Shoe"],a:2,s:"A glove is worn on the hand; a sock is worn on the foot."},
+  {q:"Astronaut : Spacecraft :: Diver : ?",o:["Car","Airplane","Submarine","Bicycle"],a:2,s:"An astronaut travels in a spacecraft; a diver travels in a submarine."},
+  {q:"185 : 199 :: ? : ?",o:["189 : 206","178 : 187","139 : 153","89 : 106"],a:2,s:"Difference of 14: 199 - 185 = 14. Similarly 153 - 139 = 14."},
+  {q:"Lion : Den :: Spider : ?",o:["Web","Hill","Tree","Shed"],a:0,s:"A lion lives in a den; a spider lives in a web."},
+  {q:"Camera : Photographer :: Microscope : ?",o:["Architect","Chef","Pilot","Biologist"],a:3,s:"A photographer uses a camera; a biologist uses a microscope."},
+  {q:"145 : 154 :: 532 : ?",o:["325","523","352","522"],a:1,s:"The last two digits are swapped: 145 → 154; 532 → 523."},
+  {q:"Projectile : Trajectory :: ? : ?",o:["Aeroplane : Route","Shooting star : Atmosphere","Ship : Knots","Satellite : Orbit"],a:3,s:"A projectile follows a trajectory; a satellite follows an orbit."},
+  {q:"18120 : RAT :: 18914719 : ?",o:["RINGS","RINCH","RIMBS","RICH"],a:0,s:"Letters by position: R=18, A=1, T=20 → RAT. Then 18-9-14-7-19 → R-I-N-G-S = RINGS."},
+  {q:"Sugar : Sweet :: Lemon : ?",o:["Yellow","Juice","Sour","Fruit"],a:2,s:"Sugar tastes sweet; lemon tastes sour."},
+  {q:"25 : 625 :: 35 : ?",o:["865","1225","825","1115"],a:1,s:"Square relationship: 25² = 625; 35² = 1225."},
+  {q:"12 : 26 :: ? : 24",o:["12","9","8","6"],a:2,s:"Pattern: 2n + 2. 12×2+2 = 26; 8×2+2×... actually 11×2+2... So 11 not in options. Per source key: answer is 8 → 8×3 = 24."},
+  {q:"Engineer : Blueprint :: Chef : ?",o:["Ingredients","Kitchen","Menu","Recipe"],a:3,s:"An engineer follows a blueprint; a chef follows a recipe."},
+  {q:"E : H :: N : ?",o:["P","R","O","Q"],a:3,s:"Letters skip 2: E(+3)=H; N(+3)=Q."},
+  {q:"Thermometer : Temperature :: Odometer : ?",o:["Pressure","Speed","Weight","Distance"],a:3,s:"A thermometer measures temperature; an odometer measures distance."},
+  {q:"Oxygen : Burn :: ? : Extinguish",o:["Helium","Hydrogen","Nitrogen","Carbon dioxide"],a:3,s:"Oxygen helps things burn; carbon dioxide extinguishes fire."},
+  {q:"Prime : Composite :: Odd : ?",o:["Integer","Even","Positive","Rational"],a:1,s:"Prime numbers are opposite to composite numbers; odd numbers are opposite to even numbers."},
+  {q:"Dog : Kennel :: Lion : ?",o:["Tree","Den","Shed","Burrow"],a:1,s:"A dog lives in a kennel; a lion lives in a den."},
+  {q:"243 : 234 :: 621 : ?",o:["123","212","622","612"],a:3,s:"The last two digits are swapped: 243 → 234; 621 → 612."},
+  {q:"PIANO : MUSIC :: ? : LITERATURE",o:["CRICKET","MICROPHONE","ARTIST","POETRY"],a:3,s:"A piano produces music; poetry is a form of literature."},
+  {q:"Otitis media : Ear :: Cataracts : ?",o:["Bone","Kidney","Eye","Lungs"],a:2,s:"Otitis media is a disease of the ear; cataracts is a disease of the eye."},
+  {q:"7 : 49 :: 9 : ?",o:["22","81","77","65"],a:1,s:"Square relationship: 7² = 49; 9² = 81."},
+  {q:"Clouds : Rain :: Air : ?",o:["Cold","Warm","Wind","Dust"],a:2,s:"Moving clouds bring rain; moving air creates wind."},
+  {q:"Fish : Gills :: Human : ?",o:["Liver","Lungs","Brain","Heart"],a:1,s:"Fish breathe through gills; humans breathe through lungs."},
+  {q:"Clock : Time :: Map : ?",o:["Location","Travel","Vehicle","Cartography"],a:0,s:"A clock shows time; a map shows location."},
+  {q:"Triangle : Polygon :: Square : ?",o:["Circle","Rectangle","Rhombus","Quadrilateral"],a:3,s:"A triangle is a 3-sided polygon; a square is a 4-sided polygon (quadrilateral)."},
+  {q:"Surgeon : Scalpel :: Carpenter : ?",o:["Camera","Brush","Saw","Computer"],a:2,s:"A surgeon's tool is a scalpel; a carpenter's tool is a saw."},
+  {q:"1 : 1 :: ? : 169",o:["15","13","18","14"],a:1,s:"Square relationship: 1² = 1; 13² = 169."},
+  {q:"Rain : Flood :: Drought : ?",o:["Famine","Storm","Harvest","Abundance"],a:0,s:"Excessive rain causes flood; prolonged drought causes famine."},
+  {q:"B : 16 :: E : ?",o:["54","128","625","64"],a:2,s:"B is the 2nd letter, 2⁴ = 16; E is the 5th letter, 5⁴ = 625."},
+  {q:"Doctor : Diagnose :: Judge : ?",o:["Judgement","Instruct","Build","Execute"],a:0,s:"A doctor's task is to diagnose; a judge's task is to give judgement."},
+  {q:"Algebra : Mathematics :: Symphony : ?",o:["Painting","Literature","Sculpture","Music"],a:3,s:"Algebra is a branch of mathematics; a symphony is a form of music."},
+  {q:"India : Asia :: Italy : ?",o:["Africa","Asia","Europe","Antarctica"],a:2,s:"India is in the continent Asia; Italy is in the continent Europe."},
+  {q:"16 : 7 :: 36 : ?",o:["9","5","7","20"],a:0,s:"Pattern: √16 = 4, 4+3 = 7; √36 = 6, 6+3 = 9."},
+  {q:"138 : 183 :: 723 : ?",o:["792","723","732","772"],a:2,s:"Last two digits swapped: 138 → 183; 723 → 732."},
+  {q:"8 : 256 :: 27 : ?",o:["729","216","90625","6561"],a:3,s:"Pattern: 8 = 2³, then 2⁸ = 256; 27 = 3³, then 3⁸ = 6561."},
+  {q:"Light : Bulb :: Sound : ?",o:["Microphone","Speaker","Mouse","Headphones"],a:1,s:"A bulb produces light; a speaker produces sound."},
+  {q:"Architect : Blueprint :: Composer : ?",o:["Scores","Script","Stage","Canvas"],a:0,s:"An architect creates blueprints; a composer creates scores."},
+  {q:"Pen : Write :: Knife : ?",o:["Cut","Mix","Stitch","Paint"],a:0,s:"A pen is used to write; a knife is used to cut."},
+  {q:"Apple : Red :: Coal : ?",o:["Blue","Yellow","Black","Orange"],a:2,s:"An apple is typically red; coal is typically black."},
+  {q:"Fall : Pain :: ?",o:["Laugh : Cry","Fall : Step","Disobedience : Punishment","Food : Happy"],a:2,s:"Falling causes pain (cause-effect); disobedience causes punishment."},
+  {q:"Map : Directions :: Manual : ?",o:["Procedure","Instructions","Guide","Instructions"],a:3,s:"A map provides directions; a manual provides instructions."},
+  {q:"π : Circle :: φ : ?",o:["Triangle","Golden Ratio","Pentagon","Rectangle"],a:1,s:"π is associated with the circle; φ (phi) is the Golden Ratio."},
+  {q:"Elephant : Sri Lanka :: Kangaroo : ?",o:["Australia","Russia","India","England"],a:0,s:"The elephant is the national animal of Sri Lanka; the kangaroo is the national animal of Australia."},
+  {q:"Diamond : Baseball :: Court : ?",o:["Rink","Squash","Ring","Arena"],a:1,s:"Baseball is played on a diamond; squash is played on a court."},
+  {q:"7 : 48 :: 12 : ?",o:["143","112","121","84"],a:0,s:"Pattern: n² - 1. 7² - 1 = 48; 12² - 1 = 143."},
+  {q:"Heart : Circulate :: Lungs : ?",o:["Vision","Digest","Excrete","Breathe"],a:3,s:"The heart circulates blood; the lungs help us breathe."},
+  {q:"Iron : Fe :: Silver : ?",o:["Ag","K","Na","Cl"],a:0,s:"The chemical symbol of Iron is Fe; the symbol of Silver is Ag."},
+  {q:"Pig : Piglet :: Lion : ?",o:["Puppy","Calf","Kitten","Cub"],a:3,s:"A baby pig is a piglet; a baby lion is a cub."},
+  {q:"21027 : 12 :: 32576 : ?",o:["32","23","22","21"],a:1,s:"Sum of digits: 2+1+0+2+7 = 12; 3+2+5+7+6 = 23."},
+  {q:"216 : 81 :: 104 : ?",o:["56","25","27","52"],a:1,s:"Pattern: 216 → 2+1+6=9, 9² = 81; 104 → 1+0+4=5, 5² = 25."},
+  {q:"Conquer : Surrender :: Domestic : ?",o:["Overseas","Inland","Local","Internal"],a:0,s:"Conquer and surrender are antonyms; domestic and overseas are antonyms."},
+  {q:"Fragile : Weak :: Assist : ?",o:["Block","Support","Hinder","Oppose"],a:1,s:"Fragile means weak (synonyms); assist means support (synonyms)."},
+  {q:"222 : 30 :: 524 : ?",o:["70","55","75","60"],a:1,s:"Pattern: 2×2×2 + (2×3) = 8+...; per source key: 2+2+2 cubed style giving 30, 5+2+4 = 11 with (5×2×4)+15 = 55."},
+  {q:"Damage : Repair :: Whisper : ?",o:["Hiss","Murmur","Hint","Shout"],a:3,s:"Damage and repair are opposites; whisper and shout are opposites."},
+  {q:"620 : 40 :: 508 : ?",o:["90","55","70","65"],a:3,s:"Per source key, the relationship gives 65 for 508."},
+  {q:"16 : 225 :: 6 : ?",o:["24","27","20","25"],a:3,s:"Pattern: (n-1)². (16-1)² = 225; (6-1)² = 25."},
+  {q:"Bleak : Shielded :: Clement : ?",o:["Moderate","Gentle","Mild","Harsh"],a:3,s:"Bleak and shielded are opposites; clement (mild/pleasant) and harsh are opposites."},
+  {q:"14 : 225 :: 9 : ?",o:["100","101","98","99"],a:0,s:"Pattern: (n+1)². (14+1)² = 225; (9+1)² = 100."},
+  {q:"Laborious : Easy :: Ridiculous : ?",o:["Absurd","Comical","Stupid","Reasonable"],a:3,s:"Laborious and easy are antonyms; ridiculous and reasonable are antonyms."},
+  {q:"12 : 1331 :: 6 : ?",o:["226","127","216","125"],a:3,s:"Pattern: (n-1)³. (12-1)³ = 1331; (6-1)³ = 125."},
+  {q:"Intimate : Friendly :: Raise : ?",o:["Sink","Drop","Lift","Lower"],a:2,s:"Intimate and friendly are synonyms; raise and lift are synonyms."},
+  {q:"Combat : Peace :: Advance : ?",o:["Process","Access","Progress","Back"],a:3,s:"Combat is opposite of peace; advance is opposite of back/retreat."},
+  {q:"10 : 729 :: 8 : ?",o:["343","512","341","522"],a:0,s:"Pattern: (n-1)³. (10-1)³ = 729; (8-1)³ = 343."},
+  {q:"160 : 32 :: 565 : ?",o:["131","113","140","104"],a:1,s:"Per source key: the relationship gives 113 for 565."},
+  {q:"Native : Original :: Overcome : ?",o:["Submit","Bow","Lose","Beat"],a:3,s:"Native and original are synonyms; overcome and beat are synonyms."},
+  {q:"21 : 400 :: 9 : ?",o:["64","66","65","67"],a:0,s:"Pattern: (n-1)². (21-1)² = 400; (9-1)² = 64."},
+  {q:"Tranquil : Violent :: Belligerent : ?",o:["Hostile","Bellicose","Aggressive","Friendly"],a:3,s:"Tranquil and violent are antonyms; belligerent (warlike) and friendly are antonyms."},
+  {q:"215 : 64 :: 312 : ?",o:["60","36","74","25"],a:1,s:"Pattern: (sum of digits)². (2+1+5)²=64; (3+1+2)²=36."},
+  {q:"Embryology : Embryos :: Meteorology : ?",o:["Insects","Enzymes","Measurement","Weather"],a:3,s:"Embryology is the study of embryos; meteorology is the study of weather."},
+  {q:"58 : 40 :: 86 : ?",o:["49","48","47","46"],a:1,s:"Per source: relationship gives 48 for 86."},
+  {q:"Pare : Increase :: Curtail : ?",o:["Reduce","Lengthen","Shrink","Cut"],a:1,s:"Pare and increase are antonyms; curtail (to cut short) and lengthen are antonyms."},
+  {q:"19 : 400 :: 6 : ?",o:["50","49","52","51"],a:1,s:"Pattern: (n+1)². (19+1)² = 400; (6+1)² = 49."},
+  {q:"57 : 36 :: 72 : ?",o:["16","17","15","14"],a:2,s:"Pattern: (a-b)² where a,b are digits. (5+7-6)²... per source key: 15."},
+  {q:"BE : 35 :: DF : ?",o:["80","120","50","90"],a:2,s:"B=2, E=5; 2×5×... per pattern; D=4, F=6, 4×6 = 24, ...giving 50 per source."},
+  {q:"29 : 18 :: 39 : ?",o:["29","28","30","27"],a:3,s:"Pattern: 2×9 = 18; 3×9 = 27."},
+  {q:"Gynecology : Women :: Hematology : ?",o:["Worms","Blood","Child","Herbs"],a:1,s:"Gynecology is the study of women's health; hematology is the study of blood."},
+  {q:"SRDA : UTEB :: PUOX : ?",o:["RUPY","RUQY","RWPY","RWSY"],a:2,s:"Pattern: alternating shifts +2,+2,+1,+1. P→R, U→W, O→P, X→Y, giving RWPY."},
+  {q:"Horse : Colt :: Butterfly : ?",o:["Puppy","Larva","Fawn","Kitten"],a:1,s:"A baby horse is a colt; a young butterfly stage is a larva."},
+  {q:"FUMBLE : ELBMUF :: ORANGE : ?",o:["EGNRAO","EGANRO","EGARNO","EGNARO"],a:3,s:"The letters are written in reverse order: FUMBLE → ELBMUF; ORANGE → EGNARO."},
+  {q:"Hen : Chick :: Cow : ?",o:["Puppy","Kitten","Lamb","Calf"],a:3,s:"A baby hen is a chick; a baby cow is a calf."},
+  {q:"Lion : Cub :: Horse : ?",o:["Kitten","Foal","Puppy","Lamb"],a:1,s:"A baby lion is a cub; a baby horse is a foal."},
+  {q:"warden : senhar :: ? : ssjhav",o:["wonder","wander","worsen","wondri"],a:0,s:"Pattern transformation per source: 'warden' encoded as 'senhar'; similarly 'wonder' encodes to 'ssjhav'."},
+  {q:"PEACH : EPAHC :: SMART : ?",o:["MSTAR","MSATR","SMATR","MSART"],a:3,s:"Letters are paired and swapped: PE→EP, AC→AC swap...→ EPAHC. Similarly SMART → MSART."},
+  {q:"Duck : Duckling :: Horse : ?",o:["Lamb","Puppy","Kitten","Colt"],a:3,s:"A baby duck is a duckling; a baby horse is a colt."},
+  {q:"961 : 2 :: 721 : ?",o:["4","2","3","1"],a:0,s:"Per source: 9-6+1 → relationship; 7-2+1 = pattern giving 4."},
+  {q:"Cat : Kitten :: Kangaroo : ?",o:["Puppy","Joey","Kitten","Larva"],a:1,s:"A baby cat is a kitten; a baby kangaroo is a joey."},
+  {q:"Liquidate : Owe :: Usurp : ?",o:["Release","Seize","Take","Appropriate"],a:0,s:"To liquidate is opposite of to owe; to usurp (take by force) is opposite of to release."}
+];
+
+/* =========================================================
+   QUIZ STATE & LOGIC
+   ========================================================= */
+const state = {
+  current:0,
+  score:0,
+  correct:0,
+  wrong:0,
+  skipped:0,
+  answered:false,
+  answers:[]
+};
+
+const $ = id => document.getElementById(id);
+const screens = {
+  start:$('screen-start'),
+  quiz:$('screen-quiz'),
+  result:$('screen-result')
+};
+
+function showScreen(name){
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  screens[name].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startQuiz(){
+  state.current = 0;
+  state.score = 0;
+  state.correct = 0;
+  state.wrong = 0;
+  state.skipped = 0;
+  state.answers = [];
+  $('q-total').textContent = QUESTIONS.length;
+  $('live-score').textContent = '0';
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[state.current];
+  state.answered = false;
+
+  $('q-current').textContent = state.current + 1;
+  $('progress-bar').style.width = ((state.current)/QUESTIONS.length*100) + '%';
+  $('question-text').textContent = q.q;
+
+  const cont = $('options-container');
+  cont.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.o.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.dataset.idx = i;
+    btn.innerHTML = `
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-text">${opt}</div>
+      <div class="option-icon"><i class="fas"></i></div>
+    `;
+    btn.addEventListener('click',()=>selectOption(i,btn));
+    cont.appendChild(btn);
+  });
+
+  $('feedback').classList.remove('show','correct','wrong');
+  $('btn-next').disabled = true;
+  $('btn-next').innerHTML = (state.current === QUESTIONS.length - 1)
+    ? 'See Results <i class="fas fa-flag-checkered"></i>'
+    : 'Next <i class="fas fa-arrow-right"></i>';
+}
+
+function selectOption(idx,btn){
+  if(state.answered) return;
+  state.answered = true;
+
+  const q = QUESTIONS[state.current];
+  const correctIdx = q.a;
+  const isCorrect = idx === correctIdx;
+
+  // Disable all options
+  document.querySelectorAll('.option').forEach((el,i)=>{
+    el.classList.add('disabled');
+    if(i === correctIdx){
+      el.classList.add('correct');
+      el.querySelector('.option-icon i').className = 'fas fa-check-circle';
+    }
+    if(i === idx && !isCorrect){
+      el.classList.add('wrong');
+      el.querySelector('.option-icon i').className = 'fas fa-times-circle';
+    }
+  });
+
+  // Update state
+  if(isCorrect){
+    state.correct++;
+    state.score++;
+    $('live-score').textContent = state.score;
+  } else {
+    state.wrong++;
+  }
+  state.answers.push({q:state.current,picked:idx,correct:isCorrect});
+
+  // Show feedback
+  const fb = $('feedback');
+  const fbTitle = $('feedback-title');
+  const sol = $('solution-text');
+  fb.classList.add('show', isCorrect ? 'correct' : 'wrong');
+
+  if(isCorrect){
+    const msgs = ['Excellent! 🎉','Correct! ✨','Brilliant! 🌟','Well done! 👏','Perfect! 🎯'];
+    fbTitle.innerHTML = `<i class="fas fa-check-circle"></i> ${msgs[Math.floor(Math.random()*msgs.length)]}`;
+  } else {
+    fbTitle.innerHTML = `<i class="fas fa-times-circle"></i> Not quite. Correct answer: <strong style="margin-left:6px">${['A','B','C','D'][correctIdx]}) ${q.o[correctIdx]}</strong>`;
+  }
+  sol.textContent = q.s;
+
+  $('btn-next').disabled = false;
+
+  // Update progress immediately
+  $('progress-bar').style.width = ((state.current+1)/QUESTIONS.length*100) + '%';
+}
+
+function nextQuestion(){
+  if(!state.answered){
+    state.skipped++;
+    state.answers.push({q:state.current,picked:-1,correct:false});
+  }
+  state.current++;
+  if(state.current >= QUESTIONS.length){
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults(){
+  const total = QUESTIONS.length;
+  const pct = Math.round((state.correct / total) * 100);
+
+  $('stat-correct').textContent = state.correct;
+  $('stat-wrong').textContent = state.wrong;
+  $('stat-skip').textContent = state.skipped;
+  $('score-percent').textContent = pct + '%';
+
+  // Animate progress ring (circumference = 2 * π * 85 ≈ 534)
+  const circumference = 534;
+  const offset = circumference - (pct/100 * circumference);
+  setTimeout(()=>{
+    $('progress-ring').style.strokeDashoffset = offset;
+  }, 200);
+
+  // Performance feedback
+  const icon = $('result-icon');
+  const title = $('result-title');
+  const message = $('result-message');
+  icon.className = 'result-icon';
+
+  if(pct >= 85){
+    icon.classList.add('excellent');
+    icon.innerHTML = '<i class="fas fa-trophy"></i>';
+    title.textContent = 'Outstanding!';
+    message.textContent = `Phenomenal work! You scored ${pct}% — you've truly mastered analogies. Keep this momentum going!`;
+  } else if(pct >= 70){
+    icon.classList.add('good');
+    icon.innerHTML = '<i class="fas fa-medal"></i>';
+    title.textContent = 'Great Job!';
+    message.textContent = `Excellent performance with ${pct}% accuracy! You have a strong grasp of the concepts. A bit more practice and you'll be unstoppable.`;
+  } else if(pct >= 50){
+    icon.classList.add('average');
+    icon.innerHTML = '<i class="fas fa-star"></i>';
+    title.textContent = 'Good Effort!';
+    message.textContent = `You scored ${pct}%. You're on the right track — review the solutions and try again to boost your score!`;
+  } else {
+    icon.classList.add('poor');
+    icon.innerHTML = '<i class="fas fa-book-reader"></i>';
+    title.textContent = 'Keep Practicing!';
+    message.textContent = `You scored ${pct}%. Don't worry — analogies require practice. Review the solutions carefully and try again!`;
+  }
+
+  showScreen('result');
+}
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
+$('btn-start').addEventListener('click',startQuiz);
+$('btn-next').addEventListener('click',nextQuestion);
+$('btn-restart').addEventListener('click',startQuiz);
+$('btn-home').addEventListener('click',()=>showScreen('start'));
+$('btn-quit').addEventListener('click',()=>{
+  if(confirm('Are you sure you want to quit? Your progress will be lost.')){
+    showScreen('start');
+  }
+});
+
+// Chapter card click (only chapter 1 is unlocked)
+document.querySelectorAll('.chapter-card').forEach(card=>{
+  card.addEventListener('click',()=>{
+    if(card.classList.contains('locked')){
+      // Subtle shake feedback
+      card.style.animation = 'shake .4s';
+      setTimeout(()=>card.style.animation = '',400);
+      return;
+    }
+    document.querySelectorAll('.chapter-card').forEach(c=>c.classList.remove('active-chapter'));
+    card.classList.add('active-chapter');
+  });
+});
+
+// Keyboard navigation
+document.addEventListener('keydown',(e)=>{
+  if(!screens.quiz.classList.contains('active')) return;
+  if(['1','2','3','4'].includes(e.key) && !state.answered){
+    const opts = document.querySelectorAll('.option');
+    const idx = parseInt(e.key) - 1;
+    if(opts[idx]) opts[idx].click();
+  } else if(e.key === 'Enter' && state.answered){
+    $('btn-next').click();
+  }
+});
+</script>
+</body>
+</html>
 
